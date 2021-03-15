@@ -48,6 +48,9 @@
 ;; -------------------------
 ;; State
 
+(defn log [& args]
+  (.apply js/console.log js/console (to-array args)))
+
 ; atom is like state, change will render re-render
 (def taskList (r/atom
                [{:text "Grocery shopping" :completed false}
@@ -57,15 +60,20 @@
 ;; -------------------------
 ;; Components
 
+; Ref: https://dzone.com/articles/clojure-handling-state
+(defn toggle-task [taskList current-todo]
+  (map #(if (= (:text current-todo) (:text %))
+         (assoc % :completed (not (:completed current-todo)))
+         %)
+      taskList))
+
 (defn TodoItem [todo]
   [:button (use-style listItemStyle {:on-click (fn [e]
-                                                 (js/console.log "clicked")
-                                                 (map (fn [txt]
-                                                        (js/console.log txt)) ["1" "2"]))})
+                                                 (log "clicked")
+                                                 (swap! taskList toggle-task todo))})
    [:div (use-style listItemTextStyle) (:text todo)]
    [:input (use-style listItemCheckboxStyle {:type "checkbox"
-                                             :checked (:completed todo)})]
-   ])
+                                             :checked (:completed todo)})]])
 
 (defn TodoForm []
   (let [newTask (r/atom "")]
