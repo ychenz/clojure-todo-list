@@ -1,3 +1,6 @@
+## Simple Todo App Implemented in ClojureScript
+
+https://www.loom.com/share/322a55bf29284501ae6efe9d474f3ee1
 
 ### Development mode
 ```
